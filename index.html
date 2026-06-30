@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca – Inatel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="celular">
+  <div class="barra-status">
+    <span>9:41</span>
+    <span>📶 WiFi 🔋</span>
+  </div>
+
+  <div class="tela ativa" id="tela-lista">
+    <div class="barra-topo">
+      <h2>📚 Biblioteca</h2>
+      <button class="botao-icone" onclick="irPara('tela-notificacoes')">🔔</button>
+    </div>
+    <div class="conteudo">
+      <div class="abas">
+        <button class="botao-aba ativa" onclick="trocarAba(this,'ativos')">Empréstimos</button>
+        <button class="botao-aba" onclick="trocarAba(this,'historico')">Histórico</button>
+      </div>
+
+      <div id="tab-ativos">
+        <div class="rotulo-secao">Ativos (3)</div>
+
+        <div class="cartao-livro" onclick="irParaDetalhe(0)">
+          <div class="capa-livro capa-azul">📘</div>
+          <div class="info-livro">
+            <div class="titulo-livro">Engenharia de Software Moderna</div>
+            <div class="autor-livro">Marco Tulio Valente</div>
+            <span class="etiqueta etiqueta-perigo">⚠ Vence hoje</span>
+          </div>
+          <button class="botao-renovar-mini" onclick="event.stopPropagation(); abrirModal(0)">Renovar</button>
+        </div>
+
+        <div class="cartao-livro" onclick="irParaDetalhe(1)">
+          <div class="capa-livro capa-verde">📗</div>
+          <div class="info-livro">
+            <div class="titulo-livro">Código Limpo</div>
+            <div class="autor-livro">Robert C. Martin</div>
+            <span class="etiqueta etiqueta-atencao">⏰ 3 dias restantes</span>
+          </div>
+          <button class="botao-renovar-mini" onclick="event.stopPropagation(); abrirModal(1)">Renovar</button>
+        </div>
+
+        <div class="cartao-livro" onclick="irParaDetalhe(2)">
+          <div class="capa-livro capa-ambar">📙</div>
+          <div class="info-livro">
+            <div class="titulo-livro">Diário de um Banana</div>
+            <div class="autor-livro">Jeff Kinney</div>
+            <span class="etiqueta etiqueta-ok">✓ 12 dias restantes</span>
+          </div>
+          <button class="botao-renovar-mini" onclick="event.stopPropagation(); abrirModal(2)">Renovar</button>
+        </div>
+      </div>
+
+      <div id="tab-historico" style="display:none">
+        <div class="rotulo-secao">Devolvidos</div>
+        <div class="cartao-historico">
+          <div class="capa-historico capa-azul">📘</div>
+          <div class="info-historico">
+            <div class="titulo-historico">Clean Architecture</div>
+            <div class="data-historico">Devolvido em 10/05/2025</div>
+          </div>
+          <span class="etiqueta-historico">Devolvido</span>
+        </div>
+        <div class="cartao-historico">
+          <div class="capa-historico capa-verde">📗</div>
+          <div class="info-historico">
+            <div class="titulo-historico">O Programador Pragmático</div>
+            <div class="data-historico">Devolvido em 02/04/2025</div>
+          </div>
+          <span class="etiqueta-historico">Devolvido</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-inferior">
+      <button class="item-nav ativo"><span class="icone-nav">📚</span>Biblioteca</button>
+      <button class="item-nav"><span class="icone-nav">🏠</span>Início</button>
+      <button class="item-nav"><span class="icone-nav">👤</span>Perfil</button>
+    </nav>
+  </div>
+
+  <div class="tela" id="tela-detalhe">
+    <div class="barra-topo">
+      <button class="botao-voltar" onclick="irPara('tela-lista')">←</button>
+      <h2>Detalhe do empréstimo</h2>
+    </div>
+    <div class="conteudo">
+      <div class="cartao-detalhe" id="conteudo-detalhe"></div>
+      <div id="alerta-detalhe" class="caixa-alerta" style="display:none">
+        ⚠️ Prazo vence hoje. Renove agora para evitar multa.
+      </div>
+      <button class="botao-primario" onclick="abrirModalDoDetalhe()">Renovar empréstimo</button>
+    </div>
+
+    <div class="sobreposicao" id="sobreposicao">
+      <div class="modal">
+        <h3>Renovar empréstimo</h3>
+        <div class="subtitulo" id="modal-titulo-livro"></div>
+        <div style="color:#6b7280; font-size:12px; margin-bottom:4px;">Nova data de devolução</div>
+        <div class="nova-data" id="modal-nova-data"></div>
+        <span class="chip-info" id="modal-info-renovacao"></span>
+        <div class="acoes-modal">
+          <button class="botao-secundario" onclick="fecharModal()">Cancelar</button>
+          <button class="botao-primario" style="flex:1" onclick="confirmarRenovacao()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tela" id="tela-sucesso">
+    <div class="barra-topo">
+      <h2>Confirmação</h2>
+    </div>
+    <div class="area-sucesso">
+      <div class="icone-sucesso">✅</div>
+      <h2>Renovação confirmada!</h2>
+      <p id="mensagem-sucesso"></p>
+      <button class="botao-primario" style="max-width:260px" onclick="irPara('tela-lista')">Voltar para Biblioteca</button>
+    </div>
+  </div>
+
+  <div class="tela" id="tela-notificacoes">
+    <div class="barra-topo">
+      <button class="botao-voltar" onclick="irPara('tela-lista')">←</button>
+      <h2>Notificações</h2>
+    </div>
+    <div class="conteudo">
+      <div class="grupo-notificacoes">Hoje</div>
+      <div class="cartao-notificacao">
+        <div class="icone-notificacao notif-perigo">🔴</div>
+        <div class="corpo-notificacao">
+          <div class="titulo-notificacao">Devolução hoje!</div>
+          <div class="mensagem-notificacao">Engenharia de Software Moderna vence hoje. Renove para evitar multa.</div>
+          <button class="link-notificacao" onclick="irParaDetalhe(0)">Renovar já</button>
+        </div>
+      </div>
+
+      <div class="grupo-notificacoes">Anteriores</div>
+      <div class="cartao-notificacao">
+        <div class="icone-notificacao notif-atencao">🟡</div>
+        <div class="corpo-notificacao">
+          <div class="titulo-notificacao">Lembrete de devolução</div>
+          <div class="mensagem-notificacao">Código Limpo vence em 3 dias (10/06/2025).</div>
+          <button class="link-notificacao" onclick="irParaDetalhe(1)">Ver livro</button>
+        </div>
+      </div>
+      <div class="cartao-notificacao">
+        <div class="icone-notificacao notif-atencao">🟡</div>
+        <div class="corpo-notificacao">
+          <div class="titulo-notificacao">Lembrete de devolução</div>
+          <div class="mensagem-notificacao">Diário de um Banana vence em 3 dias (18/06/2025).</div>
+          <button class="link-notificacao" onclick="irParaDetalhe(2)">Ver livro</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
