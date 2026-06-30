@@ -77,7 +77,7 @@ function irParaDetalhe(indice) {
 }
 
 function abrirModal(indice) {
-  livroAtual = indice;
+  irParaDetalhe(indice);
   _mostrarModal();
 }
 
