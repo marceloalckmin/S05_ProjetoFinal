@@ -30,13 +30,13 @@ const livros = [
 
 let livroAtual = 0;
 
-function irPara(id) {
+function irPara(id, fechar = true) {
   document.querySelectorAll('.tela').forEach(tela => tela.classList.remove('ativa'));
   document.getElementById(id).classList.add('ativa');
-  fecharModal();
+  if (fechar) fecharModal();
 }
 
-function irParaDetalhe(indice) {
+function irParaDetalhe(indice, fechar = true) {
   livroAtual = indice;
   const livro = livros[indice];
   const classeEtiqueta = livro.situacao === 'perigo' ? 'etiqueta-perigo'
@@ -73,11 +73,11 @@ function irParaDetalhe(indice) {
   document.getElementById('alerta-detalhe').style.display =
     livro.situacao === 'perigo' ? 'block' : 'none';
 
-  irPara('tela-detalhe');
+  irPara('tela-detalhe', fechar);
 }
 
 function abrirModal(indice) {
-  irParaDetalhe(indice);
+  irParaDetalhe(indice, false);
   _mostrarModal();
 }
 
